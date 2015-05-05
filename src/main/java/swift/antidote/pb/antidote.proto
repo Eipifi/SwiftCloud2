@@ -1,0 +1,98 @@
+// Java package specifiers
+option java_package = "swift.antidote.pb";
+option java_outer_classname = "AntidotePB";
+
+// Source: https://github.com/SyncFree/riak_pb/blob/antidote/src/antidote.proto
+// Commit ID: 05f92bb060441fb3a908b4e3a58f7a00a7a74035
+
+
+// Counter increment requenst
+message FpbIncrementReq {
+    required bytes key = 1;
+    required uint32 amount = 2;
+}
+
+// Counter increment requenst
+message FpbDecrementReq {
+    required bytes key = 1;
+    required uint32 amount = 2;
+}
+
+// Get counter request
+message FpbGetCounterReq {
+    required bytes key = 1;
+}
+
+// Response operation
+message FpbGetCounterResp {
+    required sint32 value = 1;
+}
+
+// Response operation
+message FpbOperationResp {
+    required bool success = 1;
+}
+
+// Set updates request
+message FpbSetUpdateReq {
+    required bytes key = 1;
+    repeated bytes adds = 2;
+    repeated bytes rems = 3;
+}
+
+// Get set request
+message FpbGetSetReq {
+    required bytes key = 1;
+}
+
+
+// Get set response
+message FpbGetSetResp {
+    required bytes value = 1;
+}
+
+
+//Operation possible inside atomic update transaction
+message FpbAtomicUpdateTxnOp {
+    optional FpbIncrementReq counterinc = 1;
+    optional FpbDecrementReq counterdec = 2;
+    optional FpbSetUpdateReq setupdate = 3;
+}
+
+//Atomic update transaction
+//@todo: Encode clock
+message FpbAtomicUpdateTxnReq {
+    optional bytes clock = 1;
+    repeated FpbAtomicUpdateTxnOp ops = 2;
+}
+
+//Response for a transaction
+message FpbAtomicUpdateTxnResp {
+    required bool success = 1;
+    //If transaction failed clock will be empty
+    optional bytes clock = 2;
+}
+
+//Operation possible inside atomic update transaction
+message FpbSnapshotReadTxnOp {
+    optional FpbGetCounterReq counter = 1;
+    optional FpbGetSetReq set = 2;
+}
+
+//Snapshot Read transaction
+message FpbSnapshotReadTxnReq {
+    optional bytes clock = 1;
+    repeated FpbSnapshotReadTxnOp ops = 2;
+}
+
+//Response for a transaction
+message FpbSnapshotReadTxnRespValue {
+    required bytes key = 1;
+    optional FpbGetCounterResp counter = 2;
+    optional FpbGetSetResp set = 3;
+}
+message FpbSnapshotReadTxnResp {
+    required bool success = 1;
+    optional bytes clock = 2;
+    repeated FpbSnapshotReadTxnRespValue results = 3;
+}
