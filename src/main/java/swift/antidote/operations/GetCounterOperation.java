@@ -1,16 +1,15 @@
 package swift.antidote.operations;
 
-import com.basho.riak.client.core.FutureOperation;
 import com.basho.riak.client.core.RiakMessage;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import swift.antidote.AntidoteMessageCodes;
 import swift.antidote.pb.AntidotePB;
 import swift.antidote.utils.OID;
-
+import swift.antidote.utils.SimpleFutureOperation;
 import java.util.List;
 
-public class GetCounterOperation extends FutureOperation<Integer, AntidotePB.FpbGetCounterResp, OID> {
+public class GetCounterOperation extends SimpleFutureOperation<Integer, AntidotePB.FpbGetCounterResp> {
 
     private final OID oid;
 
@@ -38,10 +37,5 @@ public class GetCounterOperation extends FutureOperation<Integer, AntidotePB.Fpb
         {
             throw new IllegalArgumentException("Invalid message received", e);
         }
-    }
-
-    @Override
-    public OID getQueryInfo() {
-        return oid;
     }
 }

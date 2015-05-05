@@ -6,7 +6,7 @@ import com.basho.riak.client.core.RiakFuture;
 import swift.antidote.operations.GetCounterOperation;
 import swift.antidote.utils.OID;
 
-public class GetCounter extends RiakCommand<Integer, OID> {
+public class GetCounter extends RiakCommand<Integer, Void> {
 
     private final OID oid;
 
@@ -15,7 +15,7 @@ public class GetCounter extends RiakCommand<Integer, OID> {
     }
 
     @Override
-    protected RiakFuture<Integer, OID> executeAsync(RiakCluster cluster) {
+    protected RiakFuture<Integer, Void> executeAsync(RiakCluster cluster) {
         return cluster.execute(new GetCounterOperation(oid));
     }
 }

@@ -1,15 +1,14 @@
 package swift.antidote.operations;
 
-import com.basho.riak.client.core.FutureOperation;
 import com.basho.riak.client.core.RiakMessage;
 import com.basho.riak.client.core.operations.Operations;
 import com.basho.riak.protobuf.RiakMessageCodes;
 import com.basho.riak.protobuf.RiakPB;
 import com.google.protobuf.InvalidProtocolBufferException;
-
+import swift.antidote.utils.SimpleFutureOperation;
 import java.util.List;
 
-public class GetServerInfoOperation extends FutureOperation<GetServerInfoOperation.Response, RiakPB.RpbGetServerInfoResp, Void> {
+public class GetServerInfoOperation extends SimpleFutureOperation<GetServerInfoOperation.Response, RiakPB.RpbGetServerInfoResp> {
 
     @Override
     protected Response convert(List<RiakPB.RpbGetServerInfoResp> rawResponse) {
@@ -35,11 +34,6 @@ public class GetServerInfoOperation extends FutureOperation<GetServerInfoOperati
         {
             throw new IllegalArgumentException("Invalid message received", e);
         }
-    }
-
-    @Override
-    public Void getQueryInfo() {
-        return null;
     }
 
     public class Response {
