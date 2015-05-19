@@ -1,18 +1,18 @@
-package swift.antidote.utils;
+package swift.core;
 
 public final class OID {
-    private String key;
+
+    private final String key;
 
     public OID(String key) {
         this.key = key;
     }
 
-    @Override
     public String toString() {
         return key;
     }
 
-    public byte[] getBytes() {
+    public byte[] toBytes() {
         return key.getBytes();
     }
 }

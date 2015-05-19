@@ -1,38 +1,24 @@
 package example.simple;
 
-import com.basho.riak.client.api.RiakClient;
-import swift.antidote.api.GetCounter;
-import swift.antidote.api.GetServerInfo;
-import swift.antidote.api.IncrementCounter;
-import swift.antidote.operations.GetServerInfoOperation;
-import swift.antidote.utils.OID;
 
-import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
-import java.util.concurrent.ExecutionException;
+import swift.antidote.AntidoteScout;
+import swift.core.Scout;
+import swift.core.Transaction;
+import swift.crdt.types.GrowCounter;
 
 public class Main {
 
-    public static final InetSocketAddress[] ADDRESSES = {new InetSocketAddress("172.16.0.159", 10017)};
+    public static void main(String[] args) {
 
-    public static void main(String[] args) throws UnknownHostException, ExecutionException, InterruptedException {
-        System.out.println("Running");
-        RiakClient riakClient = RiakClient.newClient(ADDRESSES);
+        Scout scout = new AntidoteScout();
+        Transaction txn = scout.newTransaction();
 
-        GetServerInfoOperation.Response rsp = riakClient.execute(new GetServerInfo());
-        System.out.println("Node: " + rsp.node);
-        System.out.println("Version: " + rsp.version);
+        GrowCounter counter = txn.read("example_counter", GrowCounter.class);
 
-        OID oid = new OID("example_key");
+        counter.increment();
+        System.out.println("Counter value: " + counter.value());
 
-        Integer rsp2 = riakClient.execute(new GetCounter(oid));
-        System.out.println("Counter val: " + rsp2);
+        txn.commit();
 
-        riakClient.execute(new IncrementCounter(oid, 5));
-
-        rsp2 = riakClient.execute(new GetCounter(oid));
-        System.out.println("Counter val: " + rsp2);
-
-        riakClient.shutdown();
     }
 }

@@ -1,13 +1,14 @@
 package swift.core;
 
-import swift.core.utils.CID;
-import swift.core.utils.IsolationLevel;
-import swift.core.utils.VClock;
+import java.util.List;
 
 public interface Transaction {
-    VClock startClock();
-    IsolationLevel isolationLevel();
-    <T> T getObject(CID id);
-    <T> T createObject(CID id, Class<T> type);
+    Clock getDependencies();
+    List<OperationLog> getOperations();
+    <T> T read(OID oid, Class<T> type);
     void commit();
+
+    default <T> T read(String oid, Class<T> type) {
+        return read(new OID(oid), type);
+    }
 }
