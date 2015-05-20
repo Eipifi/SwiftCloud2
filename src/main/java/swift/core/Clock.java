@@ -1,32 +1,108 @@
 package swift.core;
 
 import com.google.common.collect.Sets;
-
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
-public class Clock {
+public final class Clock {
 
-    private final Map<String, Long> values = new HashMap<>();
+    public static final Clock EMPTY = new Clock();
 
-    public long getEntry(String key) {
-        return values.containsKey(key) ? values.get(key) : 0;
+    private final Map<String, Long> data = new HashMap<>();
+
+    public long get(String key) {
+        Long value = data.get(key);
+        return value == null ? 0 : value;
     }
 
-    public boolean greaterThan(Clock that) {
-        for(String s: Sets.union(this.values.keySet(), that.values.keySet())) {
-            if (this.getEntry(s) < that.getEntry(s)) {
+    public Clock merge(Clock that) {
+        Clock result = new Clock();
+        for(String key: Sets.union(this.data.keySet(), that.data.keySet())) {
+            result.data.put(key, Math.max(this.get(key), that.get(key)));
+        }
+        return result;
+    }
+
+    public Clock with(String key, long value) {
+        return merge(create(key, value));
+    }
+
+    public Clock without(String key) {
+        Clock result = new Clock();
+        data.forEach((k, v) -> {
+            if (!Objects.equals(k, key)) result.data.put(k, v);
+        });
+        return result;
+    }
+
+    public static Clock create(String key, long value) {
+        Clock tmp = new Clock();
+        tmp.data.put(key, value);
+        return tmp;
+    }
+
+    public int size() {
+        return data.size();
+    }
+
+    /**
+     * Equals
+     * @param that
+     * @return
+     */
+    public boolean eq(Clock that) {
+        for(String s: Sets.union(this.data.keySet(), that.data.keySet())) {
+            if (this.get(s) != that.get(s)) {
                 return false;
             }
         }
         return true;
     }
 
-    public static Clock max(Clock a, Clock b) {
-        Clock c = new Clock();
-        for(String s: Sets.union(a.values.keySet(), b.values.keySet())) {
-            c.values.put(s, Math.max(a.getEntry(s), b.getEntry(s)));
+    /**
+     * Greater than or equal
+     * @param that
+     * @return
+     */
+    public boolean ge(Clock that) {
+        for(String s: Sets.union(this.data.keySet(), that.data.keySet())) {
+            if (this.get(s) < that.get(s)) {
+                return false;
+            }
         }
-        return c;
+        return true;
+    }
+
+    /**
+     * Less than or equal
+     * @param that
+     * @return
+     */
+    public boolean le(Clock that) {
+        for(String s: Sets.union(this.data.keySet(), that.data.keySet())) {
+            if (this.get(s) > that.get(s)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Greater than
+     * @param that
+     * @return
+     */
+    public boolean gt(Clock that) {
+        return ge(that) && !eq(that);
+    }
+
+    /**
+     * Less than
+     * @param that
+     * @return
+     */
+    public boolean lt(Clock that) {
+        return le(that) && !eq(that);
     }
 }

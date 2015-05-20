@@ -1,6 +1,8 @@
 package swift.core;
 
-public class OperationLog {
+import java.util.Arrays;
+
+public final class OperationLog {
 
     private final OID oid;
     private final String method;
@@ -22,5 +24,10 @@ public class OperationLog {
 
     public Object[] getArgs() {
         return args;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("oid=\"%s\" call=%s(%s)", getOid(), getMethod(), Arrays.toString(getArgs()));
     }
 }

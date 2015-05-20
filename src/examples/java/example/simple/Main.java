@@ -1,7 +1,6 @@
 package example.simple;
 
-
-import swift.antidote.AntidoteScout;
+import swift.antidote.DirectAntidoteScout;
 import swift.core.Scout;
 import swift.core.Transaction;
 import swift.crdt.types.GrowCounter;
@@ -10,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Scout scout = new AntidoteScout();
+        Scout scout = DirectAntidoteScout.connectDefault();
         Transaction txn = scout.newTransaction();
 
         GrowCounter counter = txn.read("example_counter", GrowCounter.class);
@@ -19,6 +18,6 @@ public class Main {
         System.out.println("Counter value: " + counter.value());
 
         txn.commit();
-
+        scout.close();
     }
 }
