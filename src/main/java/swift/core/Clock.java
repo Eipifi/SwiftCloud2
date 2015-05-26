@@ -24,6 +24,14 @@ public final class Clock {
         return result;
     }
 
+    public Clock filter(Clock that) {
+        Clock result = new Clock();
+        for(String key: that.data.keySet()) {
+            result.data.put(key, get(key));
+        }
+        return result;
+    }
+
     public Clock with(String key, long value) {
         return merge(create(key, value));
     }

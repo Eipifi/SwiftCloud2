@@ -27,7 +27,7 @@ public class DirectAntidoteScout implements ScoutAdapter {
         try {
             DirectAntidoteScout adapter = new DirectAntidoteScout();
             adapter.rc = RiakClient.newClient(addresses);
-            return new LogicalScout(adapter);
+            return new GeneralScout(adapter);
         } catch (UnknownHostException e) {
             throw new IllegalStateException("Failed to connect to Antidote server", e);
         }
