@@ -1,4 +1,4 @@
-package swift.antidote;
+package swift.antidote.pb;
 
 public final class AntidoteMessageCodes {
 

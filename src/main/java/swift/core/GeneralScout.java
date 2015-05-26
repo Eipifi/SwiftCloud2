@@ -110,6 +110,7 @@ public class GeneralScout implements Scout {
      * Commit worker - responsible for sending the transactions to DC and logging the commit times.
      */
     private void commitWorkerLoop() {
+        log.info("Commit worker running");
         while (true) {
             TxnInfo entry;
             try {
@@ -118,7 +119,17 @@ public class GeneralScout implements Scout {
                 log.info("Worker interrupted, quitting");
                 return;
             }
-            while (entry.commitTime == null) entry.commitTime = adapter.tryCommit(entry.txn, entry.id); // sleep
+            log.info("Trying to push transaction to DC");
+            while (entry.commitTime == null) {
+                entry.commitTime = adapter.tryCommit(entry.txn, entry.id); // sleep
+                try {
+                    log.info("Failed to commit transaction, retrying");
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    log.info("Worker interrupted, quitting");
+                    return;
+                }
+            }
             assert entry.commitTime.size() == 1;
         }
     }
@@ -127,10 +138,12 @@ public class GeneralScout implements Scout {
      * Clock worker - responsible for updating the DC clock value and discarding obsolete transactions
      */
     private void clockWorkerLoop() {
+        log.info("Clock worker running");
         while (true) {
             // Fetch the new DC clock
             Clock dcClock = adapter.tryGetClock();
             if (dcClock != null) { // If received a new clock
+                log.info("Retrieved new k-durable clock");
                 synchronized (this) {
                     // Just in case
                     if (! dcClock.ge(scoutClock.without(OTID_KEY)))
@@ -151,6 +164,8 @@ public class GeneralScout implements Scout {
                         }
                     }
                 }
+            } else {
+                log.info("Failed to retrieve new k-durable clock");
             }
             // Done, sleep and retry
             try {

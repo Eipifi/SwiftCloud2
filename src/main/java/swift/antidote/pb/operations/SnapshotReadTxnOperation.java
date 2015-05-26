@@ -1,11 +1,11 @@
-package swift.antidote.operations;
+package swift.antidote.pb.operations;
 
 import com.basho.riak.client.core.FutureOperation;
 import com.basho.riak.client.core.RiakMessage;
 import com.basho.riak.client.core.operations.Operations;
 import com.google.protobuf.InvalidProtocolBufferException;
-import swift.antidote.AntidoteMessageCodes;
-import swift.antidote.api.SnapshotReadTxn;
+import swift.antidote.pb.AntidoteMessageCodes;
+import swift.antidote.pb.api.SnapshotReadTxn;
 import swift.antidote.pb.AntidotePB;
 
 import java.util.List;

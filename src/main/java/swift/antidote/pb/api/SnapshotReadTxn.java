@@ -1,4 +1,4 @@
-package swift.antidote.api;
+package swift.antidote.pb.api;
 
 import com.basho.riak.client.api.RiakCommand;
 import com.basho.riak.client.core.RiakCluster;
