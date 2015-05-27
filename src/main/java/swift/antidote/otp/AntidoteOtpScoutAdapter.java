@@ -23,11 +23,13 @@ public class AntidoteOtpScoutAdapter implements ScoutAdapter {
     }
 
     private synchronized OtpErlangObject rpc(String method, OtpErlangObject... args) throws Exception {
-        log.info("Sending RPC: method={} args={}", method, args);
+        log.info("RPC: sending method={} args={}", method, args);
         OtpConnection conn = connectionSupplier.get();
         if (conn == null) throw new IllegalStateException("Connection unavailable");
         conn.sendRPC(SC_MODULE, method, args);
-        return Erl.response(conn.receiveRPC());
+        OtpErlangObject response = conn.receiveRPC();
+        log.info("RPC: received {}", response);
+        return Erl.response(response);
     }
 
     @Override

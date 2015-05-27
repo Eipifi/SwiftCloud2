@@ -93,7 +93,7 @@ public class GeneralScout implements Scout {
     }
 
     @Override
-    public synchronized void close() {
+    public void close() {
         try
         {
             log.info("Started the closing procedure - waiting until all transactions are committed");
@@ -130,12 +130,14 @@ public class GeneralScout implements Scout {
             log.info("Trying to push transaction to DC");
             while (entry.commitTime == null) {
                 entry.commitTime = adapter.tryCommit(entry.txn, entry.id); // sleep
-                try {
-                    log.info("Failed to commit transaction, retrying");
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    log.info("Commit worker interrupted, quitting");
-                    return;
+                if (entry.commitTime == null) {
+                    try {
+                        log.info("Failed to commit transaction, retrying");
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        log.info("Commit worker interrupted, quitting");
+                        return;
+                    }
                 }
             }
         }
