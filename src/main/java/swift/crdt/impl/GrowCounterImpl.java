@@ -6,10 +6,14 @@ import swift.crdt.types.GrowCounter;
 
 public class GrowCounterImpl implements GrowCounter, CrdtImplementation {
 
-    private int value;
+    private long value;
+
+    public GrowCounterImpl(long value) {
+        this.value = value;
+    }
 
     @Override
-    public int value() {
+    public long value() {
         return value;
     }
 
@@ -21,8 +25,6 @@ public class GrowCounterImpl implements GrowCounter, CrdtImplementation {
 
     @Override
     public Object copy() {
-        GrowCounterImpl c = new GrowCounterImpl();
-        c.value = value;
-        return c;
+        return new GrowCounterImpl(value);
     }
 }

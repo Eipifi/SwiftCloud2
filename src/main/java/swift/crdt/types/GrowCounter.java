@@ -12,7 +12,7 @@ public interface GrowCounter {
      * Returns the currently held counter value
      * @return counter value
      */
-    int value();
+    long value();
 
     /**
      * Increments the counter value by 1.

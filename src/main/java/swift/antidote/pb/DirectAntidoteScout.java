@@ -1,4 +1,4 @@
-package swift.antidote;
+package swift.antidote.pb;
 
 import com.basho.riak.client.api.RiakClient;
 import org.slf4j.Logger;
@@ -22,13 +22,13 @@ public class DirectAntidoteScout implements ScoutAdapter {
     }
 
     @Override
-    public Clock tryCommit(Transaction transaction, long id) {
+    public Clock.Entry tryCommit(Transaction transaction, long id) {
         return null;
     }
 
     @Override
     public Object tryRead(OID oid, Class type, Clock dependencies) {
-        return new GrowCounterImpl();
+        return new GrowCounterImpl(0);
     }
 
     /**

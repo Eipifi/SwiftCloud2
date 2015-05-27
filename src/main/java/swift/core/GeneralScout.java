@@ -2,6 +2,7 @@ package swift.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import swift.crdt.CrdtImplementation;
 import swift.crdt.Operations;
 
 import java.util.Iterator;
@@ -20,6 +21,7 @@ public class GeneralScout implements Scout {
     private Clock scoutClock = Clock.EMPTY;
     private final ScoutAdapter adapter;
     private long txnCounter = 0;
+    private boolean keepRunning = true;
 
     private final BlockingQueue<TxnInfo> transactions = new LinkedBlockingQueue<>();
     private final BlockingQueue<TxnInfo> toCommitToDC = new LinkedBlockingQueue<>();
@@ -41,8 +43,10 @@ public class GeneralScout implements Scout {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T read(OID oid, Class<T> type, Clock clock) {
+        Object obj = readFromDC(oid, type, clock);
+        if (obj == null) return null;
+        return (T) ((CrdtImplementation) obj).copy();
         // TODO: implement caching
-        return (T) readFromDC(oid, type, clock);
     }
 
     /**
@@ -61,7 +65,7 @@ public class GeneralScout implements Scout {
             transactions // we apply local transactions
                     .stream() // in order
                     .filter(i -> i.id <= clock.get(OTID_KEY)) // only the ones that dependencies require
-                    .filter(i -> clock.filter(i.commitTime).lt(i.commitTime)) // and we skip the ones already applied
+                    .filter(i -> clock.filter(Clock.create(i.commitTime)).lt(Clock.create(i.commitTime))) // and we skip the ones already applied
                     .flatMap(i -> i.txn.getOperations().stream()) // extract operations from transactions
                     .filter(op -> op.getOid().equals(oid)) // filter only the operations for this object
             .forEach(op -> Operations.call(object, op.getMethod(), op.getArgs())); // apply operation
@@ -92,11 +96,15 @@ public class GeneralScout implements Scout {
     public synchronized void close() {
         try
         {
+            log.info("Started the closing procedure - waiting until all transactions are committed");
             while (! transactions.isEmpty()) Thread.sleep(1000); // maybe release monitor?
+            log.info("All transactions committed, closing workers");
             commitWorker.interrupt();
             clockWorker.interrupt();
+            keepRunning = false;
             commitWorker.join();
             clockWorker.join();
+            log.info("Workers closed. Closing scout.");
             // TODO: durably store the transaction log and scoutClock
         }
         catch (InterruptedException e)
@@ -111,12 +119,12 @@ public class GeneralScout implements Scout {
      */
     private void commitWorkerLoop() {
         log.info("Commit worker running");
-        while (true) {
+        while (keepRunning) {
             TxnInfo entry;
             try {
                 entry = toCommitToDC.take();
             } catch (InterruptedException e) {
-                log.info("Worker interrupted, quitting");
+                log.info("Commit worker interrupted, quitting");
                 return;
             }
             log.info("Trying to push transaction to DC");
@@ -126,11 +134,10 @@ public class GeneralScout implements Scout {
                     log.info("Failed to commit transaction, retrying");
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    log.info("Worker interrupted, quitting");
+                    log.info("Commit worker interrupted, quitting");
                     return;
                 }
             }
-            assert entry.commitTime.size() == 1;
         }
     }
 
@@ -139,11 +146,10 @@ public class GeneralScout implements Scout {
      */
     private void clockWorkerLoop() {
         log.info("Clock worker running");
-        while (true) {
+        while (keepRunning) {
             // Fetch the new DC clock
             Clock dcClock = adapter.tryGetClock();
             if (dcClock != null) { // If received a new clock
-                log.info("Retrieved new k-durable clock");
                 synchronized (this) {
                     // Just in case
                     if (! dcClock.ge(scoutClock.without(OTID_KEY)))
@@ -157,7 +163,7 @@ public class GeneralScout implements Scout {
                     while (it.hasNext()) {
                         TxnInfo info = it.next();
                         if (info.commitTime == null) break; // if transaction wasn't yet committed, break
-                        if (scoutClock.ge(info.commitTime)) { // if the transaction is k-durable, remove it
+                        if (scoutClock.ge(Clock.create(info.commitTime))) { // if the transaction is k-durable, remove it
                             it.remove();
                         } else { // the transaction is not yet k-durable, so the next ones will not be either. Break
                             break;
@@ -171,7 +177,7 @@ public class GeneralScout implements Scout {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                log.info("Worker interrupted, quitting");
+                log.info("Clock worker interrupted, quitting");
                 return;
             }
         }
@@ -180,7 +186,7 @@ public class GeneralScout implements Scout {
     private static final class TxnInfo {
         Transaction txn;
         long id;
-        Clock commitTime; // assert size() == 1
+        Clock.Entry commitTime; // assert size() == 1
     }
 
     private static final class ObjInfo {

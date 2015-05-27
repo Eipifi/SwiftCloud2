@@ -1,11 +1,11 @@
 package swift.core;
 
 import com.google.common.collect.Sets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
-public final class Clock {
+import java.util.*;
+import java.util.stream.Collectors;
+
+public final class Clock implements Iterable<Clock.Entry> {
 
     public static final Clock EMPTY = new Clock();
 
@@ -44,10 +44,19 @@ public final class Clock {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return data.toString();
+    }
+
     public static Clock create(String key, long value) {
         Clock tmp = new Clock();
         tmp.data.put(key, value);
         return tmp;
+    }
+
+    public static Clock create(Entry entry) {
+        return create(entry.key, entry.value);
     }
 
     public int size() {
@@ -112,5 +121,24 @@ public final class Clock {
      */
     public boolean lt(Clock that) {
         return le(that) && !eq(that);
+    }
+
+    public Set<Entry> entries() {
+        return data.entrySet().stream().map((e) -> new Entry(e.getKey(), e.getValue())).collect(Collectors.toSet());
+    }
+
+    @Override
+    public Iterator<Entry> iterator() {
+        return entries().iterator();
+    }
+
+    public static class Entry {
+        public final String key;
+        public final long value;
+
+        public Entry(String key, long value) {
+            this.key = key;
+            this.value = value;
+        }
     }
 }

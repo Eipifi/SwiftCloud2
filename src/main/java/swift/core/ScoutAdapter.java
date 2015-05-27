@@ -21,9 +21,9 @@ public interface ScoutAdapter {
      * retry upon client restart.
      * The method may return null if the commit failed (or is not guaranteed to have succeeded).
      * @param transaction transaction
-     * @return clock entry (size()==1) indicating how the transaction is identified in storage.
+     * @return clock entry indicating how the transaction is identified in storage.
      */
-    Clock tryCommit(Transaction transaction, long id);
+    Clock.Entry tryCommit(Transaction transaction, long id);
 
     /**
      * Method used to read objects from storage.
