@@ -24,14 +24,6 @@ public final class Clock implements Iterable<Clock.Entry> {
         return result;
     }
 
-    public Clock filter(Clock that) {
-        Clock result = new Clock();
-        for(String key: that.data.keySet()) {
-            result.data.put(key, get(key));
-        }
-        return result;
-    }
-
     public Clock with(String key, long value) {
         return merge(create(key, value));
     }
@@ -57,10 +49,6 @@ public final class Clock implements Iterable<Clock.Entry> {
 
     public static Clock create(Entry entry) {
         return create(entry.key, entry.value);
-    }
-
-    public int size() {
-        return data.size();
     }
 
     /**
@@ -89,38 +77,6 @@ public final class Clock implements Iterable<Clock.Entry> {
             }
         }
         return true;
-    }
-
-    /**
-     * Less than or equal
-     * @param that
-     * @return
-     */
-    public boolean le(Clock that) {
-        for(String s: Sets.union(this.data.keySet(), that.data.keySet())) {
-            if (this.get(s) > that.get(s)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Greater than
-     * @param that
-     * @return
-     */
-    public boolean gt(Clock that) {
-        return ge(that) && !eq(that);
-    }
-
-    /**
-     * Less than
-     * @param that
-     * @return
-     */
-    public boolean lt(Clock that) {
-        return le(that) && !eq(that);
     }
 
     public Set<Entry> entries() {

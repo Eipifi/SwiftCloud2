@@ -2,7 +2,6 @@ package swift.antidote.otp.codecs;
 
 import com.ericsson.otp.erlang.OtpErlangAtom;
 import com.ericsson.otp.erlang.OtpErlangObject;
-import com.ericsson.otp.erlang.OtpErlangTuple;
 import swift.antidote.otp.Erl;
 import swift.crdt.impl.GrowCounterImpl;
 import swift.crdt.types.GrowCounter;
@@ -10,10 +9,7 @@ import swift.crdt.types.GrowCounter;
 public class GrowCounterCodec implements ErlangCrdtDecoder<GrowCounter> {
     @Override
     public GrowCounter decode(OtpErlangObject object) {
-        OtpErlangTuple tuple = Erl.tuple(object);
-        // tuple.elementAt(0) -> value
-        // tuple.elementAt(1) -> actual clock
-        return new GrowCounterImpl(Erl.toLong(tuple.elementAt(0)));
+        return new GrowCounterImpl(Erl.toLong(object));
     }
 
     @Override

@@ -2,6 +2,7 @@ package swift.antidote.otp;
 
 import com.ericsson.otp.erlang.OtpConnection;
 import com.ericsson.otp.erlang.OtpErlangObject;
+import com.ericsson.otp.erlang.OtpErlangTuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import swift.antidote.otp.codecs.Codecs;
@@ -58,13 +59,17 @@ public class AntidoteOtpScoutAdapter implements ScoutAdapter {
     }
 
     @Override
-    public Object tryRead(OID oid, Class type, Clock dependencies) {
+    public ObjectAndClock tryRead(OID oid, Class type, Clock dependencies) {
         try {
             OtpErlangObject response = rpc("read_object",
                     Codecs.encode(dependencies),
                     Codecs.encode(oid),
                     Codecs.getDecoder(type).erlangType());
-            return Codecs.getDecoder(type).decode(response);
+            OtpErlangTuple tuple = Erl.tuple(response);
+            ObjectAndClock result = new ObjectAndClock();
+            result.object = Codecs.getDecoder(type).decode(tuple.elementAt(0));
+            result.clock = Codecs.getCodec(Clock.class).decode(tuple.elementAt(1));
+            return result;
         } catch (Exception e) {
             log.warn("Failed tor retrieve object", e);
             return null;

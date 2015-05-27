@@ -58,19 +58,19 @@ public class GeneralScout implements Scout {
      */
     private Object readFromDC(OID oid, Class type, Clock clock) {
         // Fetch the object from DC
-        Object object = adapter.tryRead(oid, type, clock.without(OTID_KEY)); //we assume it is exactly THE version.
-        if (object == null) return null;
+        ScoutAdapter.ObjectAndClock record = adapter.tryRead(oid, type, clock.without(OTID_KEY));
+        if (record == null) return null;
         // now replay local transactions
         synchronized (this) {
             transactions // we apply local transactions
                     .stream() // in order
                     .filter(i -> i.id <= clock.get(OTID_KEY)) // only the ones that dependencies require
-                    .filter(i -> clock.filter(Clock.create(i.commitTime)).lt(Clock.create(i.commitTime))) // and we skip the ones already applied
+                    .filter(i -> i.commitTime.value > record.clock.get(i.commitTime.key)) // and we skip the ones already applied
                     .flatMap(i -> i.txn.getOperations().stream()) // extract operations from transactions
                     .filter(op -> op.getOid().equals(oid)) // filter only the operations for this object
-            .forEach(op -> Operations.call(object, op.getMethod(), op.getArgs())); // apply operation
+            .forEach(op -> Operations.call(record.object, op.getMethod(), op.getArgs())); // apply operation
         }
-        return object;
+        return record.object;
     }
 
     @Override
@@ -189,10 +189,5 @@ public class GeneralScout implements Scout {
         Transaction txn;
         long id;
         Clock.Entry commitTime; // assert size() == 1
-    }
-
-    private static final class ObjInfo {
-        Object object;
-        Clock clock;
     }
 }

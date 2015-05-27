@@ -31,7 +31,12 @@ public interface ScoutAdapter {
      * @param oid object id
      * @param type interface type
      * @param dependencies dependencies
-     * @return object
+     * @return object and associated snapshot clock
      */
-    Object tryRead(OID oid, Class type, Clock dependencies);
+    ObjectAndClock tryRead(OID oid, Class type, Clock dependencies);
+
+    class ObjectAndClock {
+        public Object object;
+        public Clock clock;
+    }
 }
