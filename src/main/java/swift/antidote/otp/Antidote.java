@@ -15,7 +15,7 @@ public class Antidote {
     public static Scout getDefaultScout() {
         try {
             Supplier<OtpConnection> sup = new FailoverConnectionSupplier("sc@127.0.0.1", "antidote", "antidote@127.0.0.1");
-            GeneralScout scout = new GeneralScout(new AntidoteOtpScoutAdapter(sup));
+            GeneralScout scout = new GeneralScout(new AntidoteOtpScoutAdapter(sup, "debug_client"));
 
             while(scout.clock().eq(Clock.EMPTY)) {
                 Uninterruptibles.sleepUninterruptibly(100, TimeUnit.MILLISECONDS);

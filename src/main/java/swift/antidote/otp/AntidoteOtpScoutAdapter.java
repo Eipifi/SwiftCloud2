@@ -17,9 +17,11 @@ public class AntidoteOtpScoutAdapter implements ScoutAdapter {
     private static final Logger log = LoggerFactory.getLogger(AntidoteOtpScoutAdapter.class);
 
     private final Supplier<OtpConnection> connectionSupplier;
+    private final String scoutId;
 
-    public AntidoteOtpScoutAdapter(Supplier<OtpConnection> connectionSupplier) {
+    public AntidoteOtpScoutAdapter(Supplier<OtpConnection> connectionSupplier, String scoudId) {
         this.connectionSupplier = connectionSupplier;
+        this.scoutId = scoudId;
     }
 
     private synchronized OtpErlangObject rpc(String method, OtpErlangObject... args) throws Exception {
@@ -44,11 +46,10 @@ public class AntidoteOtpScoutAdapter implements ScoutAdapter {
 
     @Override
     public Clock.Entry tryCommit(Transaction transaction, long id) {
-        OtpConnection conn = connectionSupplier.get();
-        if (conn == null) return null;
         try {
             OtpErlangObject encoded_txn = Codecs.getCodec(Transaction.class).encode(transaction);
-            OtpErlangObject response = rpc("execute_transaction", Codecs.encode(id), encoded_txn);
+            OtpErlangObject otid = Erl.makeTuple(Erl.makeString(scoutId), Codecs.encode(id));
+            OtpErlangObject response = rpc("execute_transaction", otid, encoded_txn);
             return Codecs.getCodec(Clock.Entry.class).decode(response);
         } catch (Exception e) {
             log.warn("Failed to retrieve clock", e);
