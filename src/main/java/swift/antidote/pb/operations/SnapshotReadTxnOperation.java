@@ -5,8 +5,8 @@ import com.basho.riak.client.core.RiakMessage;
 import com.basho.riak.client.core.operations.Operations;
 import com.google.protobuf.InvalidProtocolBufferException;
 import swift.antidote.pb.AntidoteMessageCodes;
-import swift.antidote.pb.api.SnapshotReadTxn;
 import swift.antidote.pb.AntidotePB;
+import swift.antidote.pb.api.SnapshotReadTxn;
 
 import java.util.List;
 

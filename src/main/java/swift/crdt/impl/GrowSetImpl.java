@@ -1,6 +1,7 @@
 package swift.crdt.impl;
 
 import swift.crdt.types.GrowSet;
+
 import java.util.Iterator;
 
 public class GrowSetImpl<T> implements GrowSet<T> {

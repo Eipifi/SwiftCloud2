@@ -10,6 +10,7 @@ import swift.core.Clock;
 import swift.core.OID;
 import swift.core.ScoutAdapter;
 import swift.core.Transaction;
+
 import java.util.function.Supplier;
 
 public class AntidoteOtpScoutAdapter implements ScoutAdapter {

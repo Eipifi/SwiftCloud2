@@ -1,6 +1,7 @@
 package swift.antidote.otp.codecs;
 
-import com.ericsson.otp.erlang.*;
+import com.ericsson.otp.erlang.OtpErlangList;
+import com.ericsson.otp.erlang.OtpErlangObject;
 import swift.antidote.otp.Erl;
 import swift.core.Clock;
 
