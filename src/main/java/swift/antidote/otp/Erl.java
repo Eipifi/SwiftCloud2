@@ -45,6 +45,22 @@ public class Erl {
         return tuple.elementAt(1);
     }
 
+    public static OtpErlangTuple makeTuple(OtpErlangObject... objects) {
+        return new OtpErlangTuple(objects);
+    }
+
+    public static OtpErlangList makeList(List<? extends OtpErlangObject> objects) {
+        return new OtpErlangList(objects.toArray(new OtpErlangObject[objects.size()]));
+    }
+
+    public static OtpErlangTuple makeTuple(List<? extends OtpErlangObject> objects) {
+        return new OtpErlangTuple(objects.toArray(new OtpErlangObject[objects.size()]));
+    }
+
+    public static OtpErlangAtom makeAtom(String contents) {
+        return new OtpErlangAtom(contents);
+    }
+
     public static String toString(OtpErlangObject object) {
         OtpErlangString s = cast(object);
         return s.stringValue();

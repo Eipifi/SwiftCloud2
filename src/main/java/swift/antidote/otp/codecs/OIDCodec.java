@@ -1,6 +1,5 @@
 package swift.antidote.otp.codecs;
 
-import com.ericsson.otp.erlang.OtpErlangAtom;
 import com.ericsson.otp.erlang.OtpErlangObject;
 import com.ericsson.otp.erlang.OtpErlangString;
 import swift.antidote.otp.Erl;
@@ -16,11 +15,6 @@ public class OIDCodec implements ErlangCodec<OID> {
     @Override
     public OtpErlangObject encode(OID object) {
         return new OtpErlangString(object.toString());
-    }
-
-    @Override
-    public OtpErlangObject erlangType() {
-        throw new IllegalStateException("Not applicable");
     }
 
 }

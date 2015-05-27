@@ -36,7 +36,7 @@ public final class NormalTransaction implements Transaction {
                 instances.put(oid, object);
             }
         }
-        return object == null ? null : Operations.proxy((T) object, type, (m, a) -> this.log(oid, m, a));
+        return object == null ? null : Operations.proxy((T) object, type, (m, a) -> this.log(oid, type, m, a));
     }
 
     @Override
@@ -45,7 +45,7 @@ public final class NormalTransaction implements Transaction {
         scout.commit(this);
     }
 
-    private synchronized void log(OID oid, String method, Object[] args) {
-        operations.add(new OperationLog(oid, method, args));
+    private synchronized void log(OID oid, Class type, String method, Object[] args) {
+        operations.add(new OperationLog(oid, type, method, args));
     }
 }

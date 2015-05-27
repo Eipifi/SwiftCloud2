@@ -2,7 +2,7 @@ package swift.antidote.otp.codecs;
 
 import com.ericsson.otp.erlang.OtpErlangObject;
 
-public interface ErlangCodec<T> {
+public interface ErlangCrdtDecoder<T> {
+    OtpErlangObject erlangType();
     T decode(OtpErlangObject object);
-    OtpErlangObject encode(T object);
 }

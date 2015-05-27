@@ -44,17 +44,24 @@ public class AntidoteOtpScoutAdapter implements ScoutAdapter {
     public Clock.Entry tryCommit(Transaction transaction, long id) {
         OtpConnection conn = connectionSupplier.get();
         if (conn == null) return null;
-        return null;
+        try {
+            OtpErlangObject encoded_txn = Codecs.getCodec(Transaction.class).encode(transaction);
+            OtpErlangObject response = rpc("execute_transaction", Codecs.encode(id), encoded_txn);
+            return Codecs.getCodec(Clock.Entry.class).decode(response);
+        } catch (Exception e) {
+            log.warn("Failed to retrieve clock", e);
+            return null;
+        }
     }
 
     @Override
     public Object tryRead(OID oid, Class type, Clock dependencies) {
         try {
             OtpErlangObject response = rpc("read_object",
-                    Codecs.getCodec(Clock.class).encode(dependencies),
-                    Codecs.getCodec(OID.class).encode(oid),
-                    Codecs.getCodec(type).erlangType());
-            return Codecs.getCodec(type).decode(response);
+                    Codecs.encode(dependencies),
+                    Codecs.encode(oid),
+                    Codecs.getDecoder(type).erlangType());
+            return Codecs.getDecoder(type).decode(response);
         } catch (Exception e) {
             log.warn("Failed tor retrieve object", e);
             return null;
