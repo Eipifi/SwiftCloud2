@@ -4,7 +4,7 @@ import swift.crdt.CrdtImplementation;
 import swift.crdt.Operation;
 import swift.crdt.types.GrowCounter;
 
-public class GrowCounterImpl implements GrowCounter, CrdtImplementation {
+public final class GrowCounterImpl implements GrowCounter, CrdtImplementation {
 
     private long value;
 
