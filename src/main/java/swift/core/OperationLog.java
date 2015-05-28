@@ -25,7 +25,7 @@ public final class OperationLog {
     }
 
     public Object[] getArgs() {
-        return args;
+        return args == null ? new Object[]{} : args;
     }
 
     public Class getType() { return type; }
