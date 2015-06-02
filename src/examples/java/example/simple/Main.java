@@ -1,6 +1,5 @@
 package example.simple;
 
-import swift.antidote.otp.Antidote;
 import swift.core.Scout;
 import swift.core.Transaction;
 import swift.crdt.types.GrowCounter;
@@ -8,7 +7,7 @@ import swift.crdt.types.GrowCounter;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        Scout scout = Antidote.getDefaultScout();
+        Scout scout = ScoutBuilder.build();
         try
         {
             Transaction txn = scout.newTransaction();

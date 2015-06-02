@@ -8,6 +8,7 @@ import swift.crdt.Operations;
 import java.util.Iterator;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.LongSupplier;
 
 /**
  * Logical scout, handles transaction storage and object materialization
@@ -17,10 +18,10 @@ public class GeneralScout implements Scout {
 
     private static final Logger log = LoggerFactory.getLogger(GeneralScout.class);
     private static final String OTID_KEY = "local";
+    private final LongSupplier txnCounter;
 
     private Clock scoutClock = Clock.EMPTY;
     private final ScoutAdapter adapter;
-    private long txnCounter = 0;
     private boolean keepRunning = true;
 
     private final BlockingQueue<TxnInfo> transactions = new LinkedBlockingQueue<>();
@@ -29,10 +30,11 @@ public class GeneralScout implements Scout {
     private final Thread clockWorker = new Thread(this::clockWorkerLoop);
     //private final Cache<OID,ObjInfo> cache = CacheBuilder.newBuilder().maximumSize(1000).build();
 
-    public GeneralScout(ScoutAdapter adapter) {
+    public GeneralScout(ScoutAdapter adapter, LongSupplier txnCounter) {
         this.adapter = adapter;
         commitWorker.start();
         clockWorker.start();
+        this.txnCounter = txnCounter;
     }
 
     @Override
@@ -77,7 +79,7 @@ public class GeneralScout implements Scout {
     public synchronized void commit(Transaction transaction) {
         TxnInfo entry = new TxnInfo();
         entry.txn = transaction;
-        entry.id = ++txnCounter;
+        entry.id = txnCounter.getAsLong();
         try
         {
             toCommitToDC.put(entry);

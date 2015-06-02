@@ -15,6 +15,8 @@ import java.util.function.Supplier;
 
 public class AntidoteOtpScoutAdapter implements ScoutAdapter {
 
+    private static final long K_DURABILITY = 2;
+
     private static final String SC_MODULE = "swiftcloud_api";
     private static final Logger log = LoggerFactory.getLogger(AntidoteOtpScoutAdapter.class);
 
@@ -39,7 +41,7 @@ public class AntidoteOtpScoutAdapter implements ScoutAdapter {
     @Override
     public Clock tryGetClock() {
         try {
-            return Codecs.getCodec(Clock.class).decode(rpc("get_clock"));
+            return Codecs.getCodec(Clock.class).decode(rpc("get_clock", Codecs.encode(K_DURABILITY)));
         } catch (Exception e) {
             log.warn("Failed to retrieve clock", e);
             return null;
