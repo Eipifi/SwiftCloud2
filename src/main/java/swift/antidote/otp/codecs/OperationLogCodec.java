@@ -19,8 +19,7 @@ public class OperationLogCodec implements ErlangCodec<OperationLog> {
         return Erl.makeTuple(
                 Codecs.encode(op.getOid()),
                 Codecs.getDecoder(op.getType()).erlangType(),
-                Erl.makeAtom(op.getMethod()),
-                Erl.makeList(Arrays.asList(op.getArgs()).stream().map(Codecs::encode).collect(Collectors.toList()))
+                Codecs.getDecoder(op.getType()).encodeOperation(op)
         );
     }
 }

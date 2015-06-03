@@ -15,8 +15,9 @@ public interface GrowCounter {
     long value();
 
     /**
-     * Increments the counter value by 1.
+     * Increments the counter value by a given amount.
+     * @param amount
      */
     @Operation(name = "increment")
-    void increment();
+    void increment(long amount);
 }

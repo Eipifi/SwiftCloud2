@@ -2,7 +2,6 @@ package swift.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import swift.crdt.CrdtImplementation;
 import swift.crdt.Operations;
 
 import java.util.Iterator;
@@ -45,10 +44,8 @@ public class GeneralScout implements Scout {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T read(OID oid, Class<T> type, Clock clock) {
-        Object obj = readFromDC(oid, type, clock);
-        if (obj == null) return null;
-        return (T) ((CrdtImplementation) obj).copy();
         // TODO: implement caching
+        return (T) readFromDC(oid, type, clock);
     }
 
     /**

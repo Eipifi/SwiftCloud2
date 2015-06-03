@@ -6,6 +6,7 @@ import swift.core.OID;
 import swift.core.OperationLog;
 import swift.core.Transaction;
 import swift.crdt.types.GrowCounter;
+import swift.crdt.types.GrowSet;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +23,9 @@ public class Codecs {
         codecs.put(Long.class, new LongCodec());
         codecs.put(Transaction.class, new TransactionCodec());
         codecs.put(OperationLog.class, new OperationLogCodec());
+
         decoders.put(GrowCounter.class, new GrowCounterCodec());
+        decoders.put(GrowSet.class, new GrowSetCodec());
     }
 
     @SuppressWarnings("unchecked")

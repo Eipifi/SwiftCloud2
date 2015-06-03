@@ -1,10 +1,9 @@
 package swift.crdt.impl;
 
-import swift.crdt.CrdtImplementation;
 import swift.crdt.Operation;
 import swift.crdt.types.GrowCounter;
 
-public final class GrowCounterImpl implements GrowCounter, CrdtImplementation {
+public final class GrowCounterImpl implements GrowCounter {
 
     private long value;
 
@@ -19,12 +18,8 @@ public final class GrowCounterImpl implements GrowCounter, CrdtImplementation {
 
     @Override
     @Operation(name = "increment")
-    public void increment() {
-        value += 1;
+    public void increment(long amount) {
+        value += amount;
     }
 
-    @Override
-    public Object copy() {
-        return new GrowCounterImpl(value);
-    }
 }

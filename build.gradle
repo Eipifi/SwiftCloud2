@@ -16,6 +16,7 @@ dependencies {
     compile 'com.basho.riak.protobuf:riak-pb:2.0.0.16'
     compile 'com.google.guava:guava:18.0'
     compile 'org.erlang.otp:jinterface:1.5.3'
+    compile 'org.javatuples:javatuples:1.2'
 }
 
 task(runExamples, dependsOn: 'examplesClasses', type: JavaExec) {

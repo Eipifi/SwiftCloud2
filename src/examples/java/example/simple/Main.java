@@ -13,7 +13,7 @@ public class Main {
             Transaction txn = scout.newTransaction();
 
             GrowCounter counter = txn.read("example_counter", GrowCounter.class);
-            counter.increment();
+            counter.increment(1);
             System.out.println("Counter value: " + counter.value());
 
             txn.commit();

@@ -2,12 +2,31 @@ package swift.crdt.types;
 
 import swift.crdt.Operation;
 
-import java.util.Set;
+/**
+ * Interface for a grow-only set.
+ *
+ * Allowed types:
+ *  - integer
+ *  - long
+ *  - float
+ *  - double
+ *  - boolean
+ *  - string
+ */
+public interface GrowSet extends Iterable<Object> {
 
-public interface GrowSet<T> extends Set<T> {
+    /**
+     * Checks if the given object is already in the collection.
+     * @param obj
+     * @return true if object belongs to the set, false otherwise
+     */
+    boolean contains(Object obj);
 
-    @Override
+    /**
+     * Adds the element to the set.
+     * @param obj
+     */
     @Operation(name = "add")
-    boolean add(T element);
+    void add(Object obj);
 
 }

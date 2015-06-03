@@ -3,43 +3,33 @@ package swift.crdt.impl;
 import com.google.common.collect.Iterators;
 import swift.crdt.Operation;
 import swift.crdt.types.GrowSet;
-import swift.utils.AlmostSet;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public final class GrowSetImpl<T> implements GrowSet<T>, AlmostSet<T> {
+public class GrowSetImpl implements GrowSet {
 
-    private final Set<T> set;
+    private Set<Object> underlyingSet = new HashSet<>();
 
-    public GrowSetImpl() {
-        this.set = new HashSet<>();
+    public GrowSetImpl(Collection<Object> elements) {
+        underlyingSet.addAll(elements);
     }
 
     @Override
-    public int size() {
-        return set.size();
-    }
-
-    @Override
-    public boolean contains(Object o) {
-        return set.contains(o);
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        return Iterators.unmodifiableIterator(set.iterator());
+    public boolean contains(Object obj) {
+        return underlyingSet.contains(obj);
     }
 
     @Override
     @Operation(name = "add")
-    public boolean add(T element) {
-        return set.add(element);
+    public void add(Object obj) {
+        underlyingSet.add(obj);
     }
 
     @Override
-    public boolean remove(Object o) {
-        throw new IllegalStateException("Cannot remove elements from a grow-only set");
+    public Iterator<Object> iterator() {
+        return Iterators.unmodifiableIterator(underlyingSet.iterator());
     }
 }
