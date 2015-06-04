@@ -1,11 +1,8 @@
 package swift.antidote.otp.conv;
 
-import com.ericsson.otp.erlang.OtpErlangAtom;
-import com.ericsson.otp.erlang.OtpErlangList;
-import com.ericsson.otp.erlang.OtpErlangObject;
-import com.ericsson.otp.erlang.OtpErlangTuple;
-import org.javatuples.Pair;
+import com.ericsson.otp.erlang.*;
 import swift.antidote.otp.conv.codecs.crdts.GrowCounterAdapter;
+import swift.antidote.otp.conv.codecs.crdts.GrowSetAdapter;
 import swift.antidote.otp.conv.codecs.primitives.LongCodec;
 import swift.antidote.otp.conv.codecs.primitives.StringCodec;
 import swift.antidote.otp.conv.codecs.swift.*;
@@ -14,6 +11,7 @@ import swift.core.OID;
 import swift.core.OperationLog;
 import swift.core.Transaction;
 import swift.crdt.types.GrowCounter;
+import swift.crdt.types.GrowSet;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,7 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class Erl2 {
+public class Erl {
 
     private static final Map<Class, Codec> codecs = new HashMap<>();
     private static final Map<Class, CRDTAdapter> adapters = new HashMap<>();
@@ -37,6 +35,7 @@ public class Erl2 {
         codecs.put(OperationLog.class, new OperationLogCodec());
 
         adapters.put(GrowCounter.class, new GrowCounterAdapter());
+        adapters.put(GrowSet.class, new GrowSetAdapter());
     }
 
     public static OtpErlangObject encode(Object object) {
@@ -53,7 +52,7 @@ public class Erl2 {
     }
 
     public static OtpErlangList encodeAll(Collection<?> objects) {
-        return list(StreamSupport.stream(objects.spliterator(), false).map(Erl2::encode).collect(Collectors.toList()));
+        return list(StreamSupport.stream(objects.spliterator(), false).map(Erl::encode).collect(Collectors.toList()));
     }
 
     @SuppressWarnings("unchecked")
@@ -79,7 +78,7 @@ public class Erl2 {
     }
 
     public static OtpErlangObject response(OtpErlangObject object) {
-        OtpErlangTuple tuple = tuple(object);
+        OtpErlangTuple tuple = (OtpErlangTuple) object;
         if (! new OtpErlangAtom("ok").equals(tuple.elementAt(0))) {
             throw new ConversionException("First field of response is not atom[ok]");
         }
@@ -87,6 +86,12 @@ public class Erl2 {
             throw new ConversionException("Expected response arity: 2");
         }
         return tuple.elementAt(1);
+    }
+
+    public static Object decodePrimitive(OtpErlangObject object) {
+        if (object instanceof OtpErlangString) return decode(object, String.class);
+        if (object instanceof OtpErlangLong) return decode(object, Long.class);
+        throw new ConversionException("Unknown primitive type");
     }
 
 }

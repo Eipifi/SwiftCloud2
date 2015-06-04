@@ -3,6 +3,7 @@ package example.simple;
 import swift.core.Scout;
 import swift.core.Transaction;
 import swift.crdt.types.GrowCounter;
+import swift.crdt.types.GrowSet;
 
 public class Main {
 
@@ -12,9 +13,9 @@ public class Main {
         {
             Transaction txn = scout.newTransaction();
 
-            GrowCounter counter = txn.read("example_counter", GrowCounter.class);
-            counter.increment(1);
-            System.out.println("Counter value: " + counter.value());
+            GrowSet gset = txn.read("example_set", GrowSet.class);
+            gset.add(System.currentTimeMillis());
+            gset.forEach(System.out::println);
 
             txn.commit();
         }

@@ -3,7 +3,7 @@ package swift.antidote.otp.conv.codecs.swift;
 import com.ericsson.otp.erlang.OtpErlangList;
 import com.ericsson.otp.erlang.OtpErlangObject;
 import swift.antidote.otp.conv.Codec;
-import swift.antidote.otp.conv.Erl2;
+import swift.antidote.otp.conv.Erl;
 import swift.core.Clock;
 
 import java.util.stream.Collectors;
@@ -22,10 +22,10 @@ public class ClockCodec implements Codec<Clock> {
 
     @Override
     public OtpErlangObject encode(Clock clock) {
-        return Erl2.list(StreamSupport.stream(clock.spliterator(), false).map(Erl2::encode).collect(Collectors.toList()));
+        return Erl.list(StreamSupport.stream(clock.spliterator(), false).map(Erl::encode).collect(Collectors.toList()));
     }
 
     private Clock.Entry decodeEntry(OtpErlangObject object) {
-        return Erl2.decode(object, Clock.Entry.class);
+        return Erl.decode(object, Clock.Entry.class);
     }
 }

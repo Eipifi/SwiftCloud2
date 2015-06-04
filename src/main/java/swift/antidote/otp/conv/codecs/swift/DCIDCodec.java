@@ -4,7 +4,7 @@ import com.ericsson.otp.erlang.OtpErlangAtom;
 import com.ericsson.otp.erlang.OtpErlangInt;
 import com.ericsson.otp.erlang.OtpErlangObject;
 import com.ericsson.otp.erlang.OtpErlangTuple;
-import swift.antidote.otp.conv.Erl2;
+import swift.antidote.otp.conv.Erl;
 import swift.antidote.otp.conv.Codec;
 
 public class DCIDCodec implements Codec<String> {
@@ -20,9 +20,9 @@ public class DCIDCodec implements Codec<String> {
     @Override
     public OtpErlangObject encode(String object) {
         String[] parts = object.split("/");
-        return Erl2.tuple(
+        return Erl.tuple(
                 new OtpErlangAtom(parts[0]),
-                Erl2.tuple(
+                Erl.tuple(
                         new OtpErlangInt(Integer.parseInt(parts[1])),
                         new OtpErlangInt(Integer.parseInt(parts[2])),
                         new OtpErlangInt(Integer.parseInt(parts[3]))

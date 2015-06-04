@@ -3,7 +3,7 @@ package swift.antidote.otp.conv.codecs.swift;
 import com.ericsson.otp.erlang.OtpErlangObject;
 import com.ericsson.otp.erlang.OtpErlangTuple;
 import swift.antidote.otp.conv.Codec;
-import swift.antidote.otp.conv.Erl2;
+import swift.antidote.otp.conv.Erl;
 import swift.core.Clock;
 
 public class ClockEntryCodec implements Codec<Clock.Entry> {
@@ -15,15 +15,15 @@ public class ClockEntryCodec implements Codec<Clock.Entry> {
         OtpErlangTuple tuple = (OtpErlangTuple) object;
         return new Clock.Entry(
                 dcidCodec.tryDecode(tuple.elementAt(0)),
-                Erl2.decode(tuple.elementAt(1), Long.class)
+                Erl.decode(tuple.elementAt(1), Long.class)
         );
     }
 
     @Override
     public OtpErlangObject encode(Clock.Entry object) {
-        return Erl2.tuple(
+        return Erl.tuple(
                 dcidCodec.encode(object.key),
-                Erl2.encode(object.value)
+                Erl.encode(object.value)
         );
     }
 }
