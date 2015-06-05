@@ -1,9 +1,9 @@
-package swift.antidote.otp.conv.codecs.crdts;
+package swift.antidote.conv.codecs.crdts;
 
 import com.ericsson.otp.erlang.OtpErlangAtom;
 import com.ericsson.otp.erlang.OtpErlangObject;
-import swift.antidote.otp.conv.Erl;
-import swift.antidote.otp.conv.CRDTAdapter;
+import swift.antidote.conv.CRDTAdapter;
+import swift.antidote.conv.Erl;
 import swift.crdt.impl.GrowCounterImpl;
 import swift.crdt.types.GrowCounter;
 

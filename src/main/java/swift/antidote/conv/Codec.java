@@ -1,7 +1,6 @@
-package swift.antidote.otp.conv;
+package swift.antidote.conv;
 
 import com.ericsson.otp.erlang.OtpErlangObject;
-import swift.antidote.otp.conv.ConversionException;
 
 public interface Codec<T> {
     T decode(OtpErlangObject object);

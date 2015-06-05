@@ -1,4 +1,4 @@
-package swift.antidote.otp;
+package swift.antidote;
 
 import com.ericsson.otp.erlang.OtpAuthException;
 import com.ericsson.otp.erlang.OtpConnection;

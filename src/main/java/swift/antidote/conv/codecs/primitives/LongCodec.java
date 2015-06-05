@@ -1,8 +1,8 @@
-package swift.antidote.otp.conv.codecs.primitives;
+package swift.antidote.conv.codecs.primitives;
 
 import com.ericsson.otp.erlang.OtpErlangLong;
 import com.ericsson.otp.erlang.OtpErlangObject;
-import swift.antidote.otp.conv.Codec;
+import swift.antidote.conv.Codec;
 
 public class LongCodec implements Codec<Long> {
     @Override

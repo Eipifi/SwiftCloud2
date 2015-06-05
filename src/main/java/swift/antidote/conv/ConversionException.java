@@ -1,4 +1,4 @@
-package swift.antidote.otp.conv;
+package swift.antidote.conv;
 
 public class ConversionException extends RuntimeException {
 

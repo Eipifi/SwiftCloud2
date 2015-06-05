@@ -1,4 +1,4 @@
-package swift.antidote.otp.conv;
+package swift.antidote.conv;
 
 import com.ericsson.otp.erlang.OtpErlangAtom;
 import com.ericsson.otp.erlang.OtpErlangObject;

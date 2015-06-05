@@ -1,11 +1,11 @@
-package swift.antidote.otp;
+package swift.antidote;
 
 import com.ericsson.otp.erlang.OtpConnection;
 import com.ericsson.otp.erlang.OtpErlangObject;
 import com.ericsson.otp.erlang.OtpErlangTuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import swift.antidote.otp.conv.Erl;
+import swift.antidote.conv.Erl;
 import swift.core.Clock;
 import swift.core.OID;
 import swift.core.ScoutAdapter;

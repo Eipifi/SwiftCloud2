@@ -1,11 +1,11 @@
-package swift.antidote.otp.conv;
+package swift.antidote.conv;
 
 import com.ericsson.otp.erlang.*;
-import swift.antidote.otp.conv.codecs.crdts.GrowCounterAdapter;
-import swift.antidote.otp.conv.codecs.crdts.GrowSetAdapter;
-import swift.antidote.otp.conv.codecs.primitives.LongCodec;
-import swift.antidote.otp.conv.codecs.primitives.StringCodec;
-import swift.antidote.otp.conv.codecs.swift.*;
+import swift.antidote.conv.codecs.crdts.GrowSetAdapter;
+import swift.antidote.conv.codecs.primitives.StringCodec;
+import swift.antidote.conv.codecs.swift.*;
+import swift.antidote.conv.codecs.crdts.GrowCounterAdapter;
+import swift.antidote.conv.codecs.primitives.LongCodec;
 import swift.core.Clock;
 import swift.core.OID;
 import swift.core.OperationLog;

@@ -1,8 +1,8 @@
-package swift.antidote.otp.conv.codecs.primitives;
+package swift.antidote.conv.codecs.primitives;
 
 import com.ericsson.otp.erlang.OtpErlangObject;
 import com.ericsson.otp.erlang.OtpErlangString;
-import swift.antidote.otp.conv.Codec;
+import swift.antidote.conv.Codec;
 
 public class StringCodec implements Codec<String> {
     @Override

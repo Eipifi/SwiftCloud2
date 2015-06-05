@@ -1,8 +1,8 @@
-package swift.antidote.otp.conv.codecs.swift;
+package swift.antidote.conv.codecs.swift;
 
 import com.ericsson.otp.erlang.OtpErlangObject;
-import swift.antidote.otp.conv.Codec;
-import swift.antidote.otp.conv.Erl;
+import swift.antidote.conv.Codec;
+import swift.antidote.conv.Erl;
 import swift.core.Transaction;
 
 public class TransactionCodec implements Codec<Transaction> {

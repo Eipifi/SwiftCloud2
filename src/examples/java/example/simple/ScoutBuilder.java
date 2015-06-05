@@ -1,8 +1,8 @@
 package example.simple;
 
 import com.ericsson.otp.erlang.OtpConnection;
-import swift.antidote.otp.AntidoteOtpScoutAdapter;
-import swift.antidote.otp.FailoverConnectionSupplier;
+import swift.antidote.AntidoteOtpScoutAdapter;
+import swift.antidote.FailoverConnectionSupplier;
 import swift.core.*;
 import swift.storage.FileScoutIdentity;
 

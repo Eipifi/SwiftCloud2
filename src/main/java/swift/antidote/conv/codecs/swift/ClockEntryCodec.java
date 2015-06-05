@@ -1,9 +1,9 @@
-package swift.antidote.otp.conv.codecs.swift;
+package swift.antidote.conv.codecs.swift;
 
 import com.ericsson.otp.erlang.OtpErlangObject;
 import com.ericsson.otp.erlang.OtpErlangTuple;
-import swift.antidote.otp.conv.Codec;
-import swift.antidote.otp.conv.Erl;
+import swift.antidote.conv.Codec;
+import swift.antidote.conv.Erl;
 import swift.core.Clock;
 
 public class ClockEntryCodec implements Codec<Clock.Entry> {
