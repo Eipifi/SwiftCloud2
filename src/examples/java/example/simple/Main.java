@@ -13,9 +13,9 @@ public class Main {
         {
             Transaction txn = scout.newTransaction();
 
-            GrowSet gset = txn.read("example_set", GrowSet.class);
-            gset.add(System.currentTimeMillis());
-            gset.forEach(System.out::println);
+            GrowCounter counter = txn.read("example_counter", GrowCounter.class);
+            counter.increment(3);
+            System.out.println(counter.value());
 
             txn.commit();
         }

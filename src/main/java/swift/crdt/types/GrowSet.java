@@ -6,14 +6,10 @@ import swift.crdt.Operation;
  * Interface for a grow-only set.
  *
  * Allowed types:
- *  - integer
  *  - long
- *  - float
- *  - double
- *  - boolean
  *  - string
  */
-public interface GrowSet extends Iterable<Object> {
+public interface GrowSet {
 
     /**
      * Checks if the given object is already in the collection.
